@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web-jenkins:
+    image: node:18-alpine
+    container_name: contact-manager-jenkins-web
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "4000:3000"
+    environment:
+      MONGODB_URI: mongodb://mongo-jenkins:27017/contact-manager
+      MONGODB_DB: contact-manager
+    volumes:
+      - ./:/app
+    depends_on:
+      - mongo-jenkins
+
+  mongo-jenkins:
+    image: mongo:6.0
+    container_name: contact-manager-jenkins-db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_jenkins_data:/data/db
+
+volumes:
+  mongo_jenkins_data:
